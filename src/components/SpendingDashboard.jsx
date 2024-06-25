@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 18,
     color: '#000',
-    fontFamily: 'Space Grotesk'
+    fontFamily: 'SpaceGrotesk-Bold'
   }
 })
