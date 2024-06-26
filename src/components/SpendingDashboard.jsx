@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import Card from './cards/Card'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import LoadingIndicator from './LoadingIndicator'
 
 const SpendingDashboard = (props) => {
   const { navigation } = props
+  const [loader, setLoader] = useState(false);
 
   const onLogout = () => {
+    setLoader(true);
     AsyncStorage.clear();
-    navigation.navigate("Login");
+    setTimeout(() => {
+      setLoader(false)
+      navigation.navigate("Login");
+    }, 10000)
   }
   const header = () => {
     return (
@@ -23,10 +29,15 @@ const SpendingDashboard = (props) => {
     )
   }
   return (
-    <View style={styles.container}>
-      {header()}
-      <Card />
-    </View>
+    <>
+      {!loader ? <View style={styles.container}>
+        {header()}
+        <Card />
+      </View>
+        :
+        <LoadingIndicator />
+      }
+    </>
   )
 }
 

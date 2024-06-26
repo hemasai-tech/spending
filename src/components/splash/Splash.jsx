@@ -19,8 +19,8 @@ const Splash = (props) => {
   }, [])
 
   return (
-    <View>
-      <Text>Welcome!</Text>
+    <View style={styles.container}>
+      <Text style={styles.welcome}>Welcome!</Text>
     </View>
   )
 }
@@ -32,5 +32,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignSelf: 'center'
+  },
+  welcome:{
+    fontWeight:'condensed',
+    fontSize:40,
+    textAlign:'center',
+    fontFamily:'SpaceGrotesk-SemiBold'
   }
 })

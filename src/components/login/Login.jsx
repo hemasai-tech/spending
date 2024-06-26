@@ -6,13 +6,16 @@ import {
   Button,
   StyleSheet,
   Alert,
+  ActivityIndicator
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingIndicator from '../LoadingIndicator';
 
 const Login = (props) => {
-  const {navigation} = props;
+  const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loader, setLoader] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -30,33 +33,43 @@ const Login = (props) => {
     }
 
     try {
+      setLoader(true);
       await AsyncStorage.setItem('userEmail', email);
-      Alert.alert('Login Successful', `Welcome, ${email}`);
-      navigation.navigate("SpendingDashboard")
+      setTimeout(() => {
+        setLoader(false);
+        navigation.navigate("SpendingDashboard")
+      }, 10000)
     } catch (error) {
       console.error('Failed to save email', error);
+      setLoader(false);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Login" onPress={handleLogin} />
-    </View>
+    <>
+      {!loader ?
+        <View style={styles.container}>
+          <Text style={styles.title}>Login</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          <Button title="Login" onPress={handleLogin} />
+        </View>
+        : (
+          <LoadingIndicator />
+        )}
+    </>
   );
 };
 

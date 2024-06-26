@@ -5,6 +5,7 @@ import Login from './src/components/login/Login';
 import Card from './src/components/cards/Card';
 import SpendingDashboard from './src/components/SpendingDashboard';
 import Splash from './src/components/splash/Splash';
+import EditLimit from './src/components/cards/EditLimit';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ const App = () => {
         <Stack.Screen name='Splash' component={Splash} options={{ headerShown: false }} />
         <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
         <Stack.Screen name='Card' component={Card} options={{ headerShown: false }} />
+        <Stack.Screen name='EditLimit' component={EditLimit} options={{ headerShown: false }} />
         <Stack.Screen name='SpendingDashboard' component={SpendingDashboard} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>

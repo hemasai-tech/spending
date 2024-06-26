@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CircularProgress } from 'react-native-circular-progress';
+import { useNavigation } from '@react-navigation/native';
 
-const Card = () => {
+const Card = (props) => {
+  const { navigate } = useNavigation();
   const [fillValue, setFillValue] = useState(50);
   const [progressColor, setProgressColor] = useState('#35C937');
+
   const [spendingLimit, setSpendingLimit] = useState(4567.78);
   const [amountSpentVal, setAmountSpentVal] = useState(898.90);
+
   const [selectedId, setSelectedId] = useState(null);
   const [titleSelcted, setTitleSelected] = useState("Total Spendings");
 
-  const categoriesArr = [
+  const [arrayCat, setArrayCat] = useState([
     {
       id: 0,
       category: "Clothing",
@@ -52,7 +56,7 @@ const Card = () => {
       id: 4,
       category: "Housing",
       icon: require('../../../images/House.png'),
-      amountSpent: 45,
+      amountSpent: 25,
       spendingLimit: 280,
       amountSpentVal: 130,
       color: '#DFA1A7',
@@ -66,7 +70,44 @@ const Card = () => {
       amountSpentVal: 240,
       color: '#5ACCD1',
     },
-  ];
+  ]);
+
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  useEffect(() => {
+    if (props?.route?.params?.from === "Edit") {
+      setArrayCat(props?.route?.params?.categories);
+    } else {
+      setArrayCat(arrayCat);
+    }
+  }, [props?.route?.params?.from]);
+
+  const formatDate = (date) => {
+    const options = { year: 'numeric', month: 'long' };
+    return new Date(date).toLocaleDateString(undefined, options);
+  };
+
+  const changeMonth = (direction) => {
+    let newMonth = new Date(currentMonth);
+    if (direction === 'left') {
+      newMonth.setMonth(newMonth.getMonth() - 1);
+    } else {
+      newMonth.setMonth(newMonth.getMonth() + 1);
+    }
+    setCurrentMonth(newMonth);
+
+    if (newMonth.getMonth() === new Date().getMonth() && newMonth.getFullYear() === new Date().getFullYear()) {
+      setFillValue(50);
+      setProgressColor('#35C937');
+      setAmountSpentVal(898.90);
+      setSpendingLimit(4567.78);
+    } else {
+      setFillValue(0);
+      setProgressColor('#F1F0F5');
+      setAmountSpentVal(0);
+      setSpendingLimit(0);
+    }
+  };
 
   const header = () => {
     return (
@@ -74,7 +115,7 @@ const Card = () => {
         <View>
           <Text style={styles.headerTxt}>Spending Summary</Text>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigate("EditLimit", { arrayCat })}>
           <Text style={[styles.headerTxt, { textDecorationLine: 'underline' }]}>Edit</Text>
         </TouchableOpacity>
       </View>
@@ -84,13 +125,13 @@ const Card = () => {
   const cardHeader = () => {
     return (
       <View style={styles.cardHeader}>
-        <TouchableOpacity style={styles.iconView}>
+        <TouchableOpacity style={styles.iconView} onPress={() => changeMonth('left')}>
           <MaterialIcons name="chevron-left" size={34} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles.date}>June 2024</Text>
+          <Text style={styles.date}>{formatDate(currentMonth)}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconView}>
+        <TouchableOpacity style={styles.iconView} onPress={() => changeMonth('right')}>
           <MaterialIcons name="chevron-right" size={34} />
         </TouchableOpacity>
       </View>
@@ -146,31 +187,32 @@ const Card = () => {
     );
   };
 
-  const onCategoryClick = (item) => {
+  const onCategoryClick = (item, percentage) => {
     if (selectedId === item.id) {
       setFillValue(50);
       setProgressColor('#35C937');
       setAmountSpentVal(898.90);
       setSpendingLimit(4567.78);
       setSelectedId(null);
-      setTitleSelected("Total Spendings")
+      setTitleSelected("Total Spendings");
     } else {
-      setFillValue(item.amountSpent);
+      setFillValue(percentage);
       setProgressColor(item.color);
       setAmountSpentVal(item.amountSpentVal);
       setSpendingLimit(item.spendingLimit);
       setSelectedId(item.id);
-      setTitleSelected(item.category)
+      setTitleSelected(item.category);
     }
   };
 
   const renderCategoryIcons = ({ item }) => {
+    const percentage = parseInt(((item.amountSpentVal / item.spendingLimit) * 100).toFixed(2));
     return (
       <View style={styles.categoryView}>
         <CircularProgress
           size={60}
           width={3}
-          fill={item.amountSpent}
+          fill={percentage}
           tintColor={selectedId === item.id ? '#fff' : item.color}
           rotation={-90}
           backgroundColor="#fff"
@@ -184,7 +226,7 @@ const Card = () => {
                   padding: 15,
                   borderRadius: 30
                 }}
-                  onPress={() => onCategoryClick(item)}
+                  onPress={() => onCategoryClick(item, percentage)}
                 >
                   <Image source={item.icon} style={[
                     styles.img,
@@ -202,12 +244,19 @@ const Card = () => {
   };
 
   const categoriesDisplay = () => {
+    if (fillValue === 0) {
+      return (
+        <View style={styles.noData}>
+          <Image source={require('../../../images/nodata.png')} style={styles.nodataImg} />
+        </View>
+      );
+    }
     return (
       <View style={styles.list}>
         <FlatList
           numColumns={3}
           key={3}
-          data={categoriesArr}
+          data={arrayCat}
           renderItem={renderCategoryIcons}
           keyExtractor={(item, index) => index.toString()}
         />
@@ -312,6 +361,15 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     color: '#1D1D2C'
   },
+  noData: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200,
+  },
+  nodataImg: {
+    height: 200,
+    width: 200
+  }
 });
 
 export default Card;
