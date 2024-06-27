@@ -121,6 +121,13 @@ const Card = (props) => {
       </View>
     );
   };
+/**
+ * The `cardHeader` function returns a JSX element representing a card header with left and right
+ * chevron icons for changing the month.
+ * @returns A cardHeader component is being returned, which consists of a View containing three
+ * TouchableOpacity components. The TouchableOpacity components contain MaterialIcons with chevron-left
+ * and chevron-right icons, and a Text component displaying the formatted currentMonth date.
+ */
 
   const cardHeader = () => {
     return (
@@ -137,6 +144,9 @@ const Card = (props) => {
       </View>
     );
   };
+/* The `progressBar` function is responsible for rendering a circular progress bar component using the
+`CircularProgress` component from the `react-native-circular-progress` library. Here's a breakdown
+of what it does: */
 
   const progressBar = () => {
     return (
@@ -187,6 +197,10 @@ const Card = (props) => {
     );
   };
 
+/**
+ * The function `onCategoryClick` updates state values based on the selected category item and
+ * percentage.
+ */
   const onCategoryClick = (item, percentage) => {
     if (selectedId === item.id) {
       setFillValue(50);
@@ -204,6 +218,13 @@ const Card = (props) => {
       setTitleSelected(item.category);
     }
   };
+/**
+ * The function `renderCategoryIcons` displays category icons with circular progress based on spending
+ * data.
+ * @returns The `renderCategoryIcons` function is returning a JSX element that consists of a `View`
+ * component containing a `CircularProgress` component and a `Text` component. Inside the
+ * `CircularProgress` component, there is a `TouchableOpacity` wrapping an `Image` component.
+ */
 
   const renderCategoryIcons = ({ item }) => {
     const percentage = parseInt(((item.amountSpentVal / item.spendingLimit) * 100).toFixed(2));
@@ -243,6 +264,12 @@ const Card = (props) => {
     );
   };
 
+// /**
+//  * The function `categoriesDisplay` conditionally renders either a view with a "no data" image or a
+//  * FlatList of category icons based on the value of `fillValue`.
+//  * @returns The `categoriesDisplay` function returns either a View with an Image component if
+//  * `fillValue` is 0, or a View with a FlatList component if `fillValue` is not 0.
+//  */
   const categoriesDisplay = () => {
     if (fillValue === 0) {
       return (

@@ -14,6 +14,9 @@ const EditLimit = (props) => {
     setTotalAmount(amount)
   }, [categories])
 
+/* The `handleSliderChange` function is a callback function created using the `useCallback` hook in
+React. This function is responsible for updating the `categories` state based on the slider value
+and the index of the category being modified. */
   const handleSliderChange = useCallback((value, index) => {
     const updatedCategories = categories.map((cat, i) => 
       i === index ? { ...cat, amountSpentVal: value } : cat
@@ -21,6 +24,15 @@ const EditLimit = (props) => {
     setCategories(updatedCategories);
   },[categories]);
 
+/**
+ * The `headerCard` function returns a React component displaying a header with total spending limit
+ * information.
+ * @returns A headerCard component is being returned. It consists of a View component with styles
+ * applied, containing a TouchableOpacity component with an onPress event that navigates to the "Card"
+ * screen with parameters, an Icon component displaying a chevron-left icon, a Text component with the
+ * text "Total Spending Limit", and another Text component displaying the totalAmount variable prefixed
+ * with "AED".
+ */
   const headerCard = () => {
     return (
       <View style={styles.headerCard}>
@@ -39,6 +51,9 @@ const EditLimit = (props) => {
       </View>
     )
   }
+/* The `SliderComp` component is a memoized functional component created using the `memo` function from
+React. It takes two props, `item` and `index`, and returns a `Slider` component with specific
+configurations. Here's a breakdown of what the `SliderComp` component is doing: */
 
   const SliderComp = memo(({ item, index }) => {
     return (
@@ -55,6 +70,8 @@ const EditLimit = (props) => {
       />
     )
   });
+/* The `renderCard` function is a component that returns a card view for each item in the list of
+categories. Here's a breakdown of what the `renderCard` function is doing: */
 
   const renderCard = ({ item, index }) => {
     return (
@@ -75,6 +92,13 @@ const EditLimit = (props) => {
       </View>
     )
   };
+/**
+ * The `showList` function returns a component that displays a list of categories using a FlatList
+ * component in React.
+ * @returns A `View` component containing a `FlatList` component is being returned. The `FlatList`
+ * component is rendering items from the `categories` data array using the `renderCard` function as the
+ * renderItem prop. Each item in the list is assigned a unique key using the `keyExtractor` prop.
+ */
 
   const showList = () => {
     return (

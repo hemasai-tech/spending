@@ -21,6 +21,14 @@ const Login = (props) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(String(email).toLowerCase());
   };
+  
+/**
+ * The handleLogin function validates the email and password, saves the user's email in AsyncStorage,
+ * and navigates to the SpendingDashboard screen after a delay.
+ * @returns The `handleLogin` function returns either after displaying an alert for invalid email or
+ * password, or after setting the user's email in AsyncStorage and navigating to the
+ * "SpendingDashboard" screen.
+ */
 
   const handleLogin = async () => {
     if (!validateEmail(email)) {

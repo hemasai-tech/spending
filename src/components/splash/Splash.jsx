@@ -4,6 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Splash = (props) => {
   const { navigation } = props
+  
+/**
+ * The function `checkEmailLogin` checks if a user is logged in based on their email and navigates to
+ * the SpendingDashboard or Login screen accordingly.
+ */
 
   const checkEmailLogin = async () => {
     let loggedIn = await AsyncStorage.getItem('userEmail')

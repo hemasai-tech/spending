@@ -16,6 +16,13 @@ const SpendingDashboard = (props) => {
       navigation.navigate("Login");
     }, 10000)
   }
+/**
+ * The `header` function in JavaScript React renders a header component with a title "Spending
+ * Dashboard" and a logout button.
+ * @returns A header component is being returned. It consists of a View component with two child
+ * components - a Text component displaying "Spending Dashboard" and a TouchableOpacity component with
+ * a Text component displaying "Logout".
+ */
   const header = () => {
     return (
       <View style={styles.header}>
